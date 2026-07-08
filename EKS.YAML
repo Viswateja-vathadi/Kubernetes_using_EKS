@@ -39,3 +39,7 @@ cloudWatch:      # for prod mandatory
       - authenticator
       - controllerManager
       - scheduler
+
+
+#  eksctl create cluster --config-file = eks.yaml 
+# kubectl get nodes
