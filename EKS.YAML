@@ -1,0 +1,41 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks-cluster
+  region: us-east-1
+  version: "1.33"
+
+vpc:
+  nat:
+    gateway: HighlyAvailable   #tells eksctl to create NAT Gateways for private subnets.
+
+managedNodeGroups:
+  - name: PROD
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    volumeSize: 20
+    labels:
+      role: system
+    tags:
+      NodeGroupType: system
+      privateNetworking: true    # privateNetworking: true means the EKS worker nodes are launched in private subnets
+
+#default it will create we didn't need to add but for specific versio we can add here
+addons:
+  - name: vpc-cni # AWS VPC Container Network Interface.(Purpose: Assigns IP addresses to Pods & Connects Pods to your VPC network)
+    version: latest
+  - name: kube-proxy  # Manages Kubernetes Service networking (Purpose:Routes traffic to Pods & Maintains networking rules on nodes)
+  - name: coredns # CoreDNS converts the name into an IP.
+  - name: aws-ebs-csi-driver  # Allows Kubernetes to create and manage EBS volumes.
+
+cloudWatch:      # for prod mandatory
+  clusterLogging:
+    enableTypes:
+      - api
+      - audit
+      - authenticator
+      - controllerManager
+      - scheduler
