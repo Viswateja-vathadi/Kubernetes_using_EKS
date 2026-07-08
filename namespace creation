@@ -9,3 +9,4 @@ metadata:
 # manual
 #  kubectl create namespace NAME
 # kubectl get namespaces
+  
